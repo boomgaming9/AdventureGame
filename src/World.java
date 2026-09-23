@@ -5,8 +5,8 @@ public class World {
 
     /* 3x3 grid:
            room1 - room2 - room3
-             |       |       |
-           room4 - room5 - room6
+             |               |
+           room4   room5   room6
              |       |       |
            room7 - room8 - room9 */
 
@@ -21,13 +21,22 @@ public class World {
         room8 = new Room("Room 8", "A vast underground lake stretching into the darkness.");
         room9 = new Room("Room 9", "A cold cave where your breath forms small clouds of mist.");
 
-        // Default, no walls placed
+        /* Default, no walls placed
         link(room1, null,  room2, room4, null);
         link(room2, null,  room3, room5, room1);
         link(room3, null,  null,  room6, room2);
         link(room4, room1, room5, room7, null);
         link(room5, room2, room6, room8, room4);
         link(room6, room3, null,  room9, room5);
+        link(room7, room4, room8, null,  null);
+        link(room8, room5, room9, null,  room7);
+        link(room9, room6, null,  null,  room8); */
+        link(room1, null,  room2, room4, null);
+        link(room2, null,  room3, null,  room1);
+        link(room3, null,  null,  room6, room2);
+        link(room4, room1, null,  room7, null);
+        link(room5, null,  null,  room8, null);
+        link(room6, room3, null,  room9, null);
         link(room7, room4, room8, null,  null);
         link(room8, room5, room9, null,  room7);
         link(room9, room6, null,  null,  room8);
