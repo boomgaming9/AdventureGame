@@ -4,9 +4,8 @@ public class Adventure {
 
     public void start() {
         currentRoom = new World().getStartRoom();
-        IO.println("You wake up in a strange place. Nine rooms are connected, and one of them hides a secret.");
-        IO.println("Type HELP at any time to see your options.\n");
-        UI.printRoom(currentRoom);
+        UI.firstRoom(currentRoom);
+        currentRoom.isVisited();
 
         boolean isRunning = true;
 
@@ -47,7 +46,8 @@ public class Adventure {
             UI.printCannotGo();
         } else {
             currentRoom = next;
-            UI.printRoom(currentRoom);
+            IO.println("You've entered " + currentRoom.getName());
+            currentRoom.isVisited();
         }
     }
 }
