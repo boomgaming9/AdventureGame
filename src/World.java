@@ -4,11 +4,11 @@ public class World {
                        room7, room8, room9;
 
     /* 3x3 grid:
-               room1 - room2 - room3
-                 |       |       |
-               room4 - room5 - room6
-                 |       |       |
-               room7 - room8 - room9 */
+           room1 - room2 - room3
+             |       |       |
+           room4 - room5 - room6
+             |       |       |
+           room7 - room8 - room9 */
 
     public World() {
         room1 = new Room("Room 1", "TBD 1");
