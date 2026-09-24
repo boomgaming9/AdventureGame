@@ -1,6 +1,4 @@
 public class UserInterface {
-    private Room currentRoom;
-    private final UserInterface UI = new UserInterface();
 
     public String readCommand() {
         String kommando =  IO.readln().trim().toLowerCase();
@@ -37,6 +35,11 @@ public class UserInterface {
         IO.println(" look    - describe the current room");
         IO.println(" help    - show this list");
         IO.println(" exit    - quit the game");
+    }
+
+    public void printWelcome() {
+        IO.println("You wake up in a strange place. Nine rooms are connected, and one of them hides a secret.");
+        IO.println("Type HELP at any time to see your options.\n");
     }
 
     public void printGoodbye() {
