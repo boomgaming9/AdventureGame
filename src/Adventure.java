@@ -1,6 +1,6 @@
 public class Adventure {
     private Room currentRoom;
-    private final ConsoleUI UI = new ConsoleUI();
+    private final UserInterface UI = new UserInterface();
 
     public void start() {
         currentRoom = new World().getStartRoom();
