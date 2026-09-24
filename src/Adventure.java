@@ -5,8 +5,7 @@ public class Adventure {
     public void start() {
         currentRoom = new World().getStartRoom();
         UI.firstRoom(currentRoom);
-        currentRoom.isVisited();
-
+        UI.isVisited(currentRoom);
         boolean isRunning = true;
 
         while (isRunning) {
@@ -47,7 +46,7 @@ public class Adventure {
         } else {
             currentRoom = next;
             IO.println("You've entered " + currentRoom.getName());
-            currentRoom.isVisited();
+            UI.isVisited(currentRoom);
         }
     }
 }

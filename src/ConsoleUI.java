@@ -18,4 +18,12 @@ public class ConsoleUI {
     public void printCannotGo() {
         IO.println("You cannot go that way");
     }
+    public void isVisited(Room room){
+        if (!room.isVisited){
+            IO.println(room.getDescription());
+        } else {
+            IO.println("You've already been here...");
+        }
+        room.isVisited = true;
+    }
 }
