@@ -1,53 +1,35 @@
 public class Adventure {
-    private Room currentRoom;
-    private final ConsoleUI UI = new ConsoleUI();
+    private final UserInterface ui = new UserInterface();
+    private Player player;
 
     public void start() {
-        currentRoom = new World().getStartRoom();
-        UI.firstRoom(currentRoom);
-        currentRoom.isVisited();
+        player = new Player(new World().getStartRoom());
+        ui.printWelcome();
+        ui.printRoom(player.getCurrentRoom());
 
         boolean isRunning = true;
 
         while (isRunning) {
-            String kommando = UI.readCommand();
-
-            if (kommando.startsWith("go ")) {
-                kommando = kommando.substring(3).trim();
-            }   // QoL
+            String kommando = ui.readCommand();
 
             switch (kommando) {
-                case "north", "n" -> move(currentRoom.getNorth());
-                case "east",  "e" -> move(currentRoom.getEast());
-                case "south", "s" -> move(currentRoom.getSouth());
-                case "west",  "w" -> move(currentRoom.getWest());
-                case "look"        -> UI.printRoom(currentRoom);
-                case "help" -> {
-                    IO.println("Commands:");
-                    IO.println(" go north / north / n");
-                    IO.println(" go east  / east  / e");
-                    IO.println(" go south / south / s");
-                    IO.println(" go west  / west  / w");
-                    IO.println(" look    - describe the current room");
-                    IO.println(" help    - show this list");
-                    IO.println(" exit    - quit the game");
-                }
+                case "north", "east", "south", "west" -> move(kommando);
+                case "look" -> ui.printRoom(player.getCurrentRoom());
+                case "help" -> ui.printHelp();
                 case "exit" -> {
-                    IO.println("Goodbye!");
+                    ui.printGoodbye();
                     isRunning = false;
                 }
-                default -> IO.println("Unknown command. Type HELP for a list of commands.");
+                default -> ui.printUnknownCommand();
             }
         }
     }
 
-    private void move(Room next) {
-        if (next == null) {
-            UI.printCannotGo();
+    private void move(String direction) {
+        if (player.move(direction)) {
+            ui.printRoom(player.getCurrentRoom());
         } else {
-            currentRoom = next;
-            IO.println("You've entered " + currentRoom.getName());
-            currentRoom.isVisited();
+            ui.printCannotGo();
         }
     }
 }
