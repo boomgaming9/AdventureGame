@@ -1,18 +1,18 @@
 public class UserInterface {
 
     public String readCommand() {
-        String kommando =  IO.readln().trim().toLowerCase();
+        String command =  IO.readln("> ").trim().toLowerCase();
 
-        if (kommando.startsWith("go ")) {
-            kommando = kommando.substring(3).trim();
+        if (command.startsWith("go ")) {
+            command = command.substring(3).trim();
         }
 
-        return switch (kommando) {
+        return switch (command) {
             case "n" -> "north";
             case "e" -> "east";
             case "s" -> "south";
             case "w" -> "west";
-            default  -> kommando;
+            default  -> command;
         };
 
     }
