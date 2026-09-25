@@ -1,35 +1,35 @@
 public class Adventure {
-    private final UserInterface ui = new UserInterface();
+    private final UserInterface UI = new UserInterface();
     private Player player;
 
     public void start() {
         player = new Player(new World().getStartRoom());
-        ui.printWelcome();
-        ui.printRoom(player.getCurrentRoom());
+        UI.printWelcome();
+        UI.printRoom(player.getCurrentRoom());
 
         boolean isRunning = true;
 
         while (isRunning) {
-            String kommando = ui.readCommand();
+            String command = UI.readCommand();
 
-            switch (kommando) {
-                case "north", "east", "south", "west" -> move(kommando);
-                case "look" -> ui.printRoom(player.getCurrentRoom());
-                case "help" -> ui.printHelp();
+            switch (command) {
+                case "north", "east", "south", "west" -> move(command);
+                case "look" -> UI.printRoom(player.getCurrentRoom());
+                case "help" -> UI.printHelp();
                 case "exit" -> {
-                    ui.printGoodbye();
+                    UI.printGoodbye();
                     isRunning = false;
                 }
-                default -> ui.printUnknownCommand();
+                default -> UI.printUnknownCommand();
             }
         }
     }
 
     private void move(String direction) {
         if (player.move(direction)) {
-            ui.printRoom(player.getCurrentRoom());
+            UI.printRoom(player.getCurrentRoom());
         } else {
-            ui.printCannotGo();
+            UI.printCannotGo();
         }
     }
 }
