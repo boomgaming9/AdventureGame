@@ -1,68 +1,40 @@
 public class Adventure {
-    private final ConsoleUI UI = new ConsoleUI();
     private Player player;
-    private World world;
 
-    public Adventure(Player player, World world) {
+    public Adventure(Player player) {
         this.player = player;
-        this.world = world;
-        UI.setAdventure(this);
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    private void move(String direction) {
-        if (player.move(direction)) {
-            UI.printRoom(player.getCurrentRoom());
-        } else {
-            UI.printCannotGo();
-        }
+    public boolean move(String direction) {
+       return player.move(direction);
     }
 
-    private void inspect(String itemName) {
-        Room room = player.getCurrentRoom();
-        Item item = room.getItem(itemName);
-
-        if (item == null) {
-            UI.printUnknownCommand();
-            return;
-        }
-        UI.printInspect(item);
-
-        for (Item content : item.getContents()) {
-            if (!room.hasItem(content.getName()) && !player.hasItem(content.getName())) {
-                room.addItem(content);
-            }
-        }
-    }
-
-    private void grab(String itemName) {
+    public boolean grab(String itemName) {
         Room room = player.getCurrentRoom();
         Item item = room.getItem(itemName);
         if (item == null) {
-            UI.printUnknownCommand();
-            return;
+            return false;
         }
         if (!item.can("pickup")) {
-            IO.println("You can't grab the " + item.getName() + ".");
-            return;
+            return false;
         }
         room.removeItem(itemName);
         player.grab(item);
-        UI.printGrab(item);
+        return true;
     }
 
-    private void drop(String itemName) {
+    public boolean drop(String itemName) {
         Room room = player.getCurrentRoom();
         Item item = player.getItem(itemName);
         if (item == null) {
-            UI.printUnknownCommand();
-            return;
+            return false;
         }
         room.addItem(item);
         player.drop(item);
-        UI.printDrop(item);
+        return true;
     }
 }

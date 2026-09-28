@@ -22,7 +22,11 @@ public class Room {
                 ? description
                 : "You've already been here..."); // Potentially swap 'been here' with 'searched here' for added intrigue
         this.isVisited = true;
-        }
+    }   //needs to be moved to ConsoleUI
+
+    public void printDescription() {
+        IO.println(description);
+    }
 
     public void addItem(Item item) {
          items.add(item);
