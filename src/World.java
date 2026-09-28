@@ -31,6 +31,16 @@ public class World {
         link(room7, room4, room8, null,  null);
         link(room8, room5, room9, null,  room7);
         link(room9, room6, null,  null,  room8);
+
+        room1.addItem("lamp", "a shiny brass lamp");
+        room1.addItem("coins", "some gold coins");
+        room3.addItem("book", "an ancient book");
+        room5.addItem("crystal", "a glowing crystal");
+        room6.addItem("sword", "a rusty sword");
+        room6.addItem("shield", "a dented shield");
+        room6.addItem("helmet", "an old helmet");
+        room8.addItem("rope", "a coil of rope");
+
     }
 
     private void link(Room current, Room north, Room east, Room south, Room west) {
@@ -43,4 +53,6 @@ public class World {
     public Room getStartRoom() {
         return room1;
     }
+
+
 }

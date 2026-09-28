@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Item {
     private final String ShortName;
     private final String LongName;
@@ -18,7 +16,7 @@ public class Item {
     }
 
     public String getDefiniteName() {
-        String[] articles = {"a", "an", "this"};
+        String[] articles = {"a", "an", "this", };
         for (String article : articles) {
             if (LongName.startsWith(article)) {
                 return "the " + LongName.substring(article.length());

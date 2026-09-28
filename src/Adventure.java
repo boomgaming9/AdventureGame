@@ -1,5 +1,5 @@
 public class Adventure {
-    private final UserInterface ui = new UserInterface();
+    private final ConsoleUI ui = new ConsoleUI();
     private Player player;
 
     public void start() {
@@ -21,6 +21,8 @@ public class Adventure {
                     isRunning = false;
                 }
                 default -> ui.printUnknownCommand();
+
+                //remove while loop
             }
         }
     }
