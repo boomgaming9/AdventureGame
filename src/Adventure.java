@@ -1,28 +1,16 @@
 public class Adventure {
-    private final UserInterface UI = new UserInterface();
+    private final ConsoleUI UI = new ConsoleUI();
     private Player player;
+    private World world;
 
-    public void start() {
-        player = new Player(new World().getStartRoom());
-        UI.printWelcome();
-        UI.printRoom(player.getCurrentRoom());
+    public Adventure(Player player, World world) {
+        this.player = player;
+        this.world = world;
+        UI.setAdventure(this);
+    }
 
-        boolean isRunning = true;
-
-        while (isRunning) {
-            String command = UI.readCommand();
-
-            switch (command) {
-                case "north", "east", "south", "west" -> move(command);
-                case "look" -> UI.printRoom(player.getCurrentRoom());
-                case "help" -> UI.printHelp();
-                case "exit" -> {
-                    UI.printGoodbye();
-                    isRunning = false;
-                }
-                default -> UI.printUnknownCommand();
-            }
-        }
+    public Player getPlayer() {
+        return player;
     }
 
     private void move(String direction) {
@@ -31,5 +19,50 @@ public class Adventure {
         } else {
             UI.printCannotGo();
         }
+    }
+
+    private void inspect(String itemName) {
+        Room room = player.getCurrentRoom();
+        Item item = room.getItem(itemName);
+
+        if (item == null) {
+            UI.printUnknownCommand();
+            return;
+        }
+        UI.printInspect(item);
+
+        for (Item content : item.getContents()) {
+            if (!room.hasItem(content.getName()) && !player.hasItem(content.getName())) {
+                room.addItem(content);
+            }
+        }
+    }
+
+    private void grab(String itemName) {
+        Room room = player.getCurrentRoom();
+        Item item = room.getItem(itemName);
+        if (item == null) {
+            UI.printUnknownCommand();
+            return;
+        }
+        if (!item.can("pickup")) {
+            IO.println("You can't grab the " + item.getName() + ".");
+            return;
+        }
+        room.removeItem(itemName);
+        player.grab(item);
+        UI.printGrab(item);
+    }
+
+    private void drop(String itemName) {
+        Room room = player.getCurrentRoom();
+        Item item = player.getItem(itemName);
+        if (item == null) {
+            UI.printUnknownCommand();
+            return;
+        }
+        room.addItem(item);
+        player.drop(item);
+        UI.printDrop(item);
     }
 }
