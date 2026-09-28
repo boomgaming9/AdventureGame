@@ -1,22 +1,57 @@
+import java.util.Set;
+
 public class World {
     private final Room room1, room2, room3,
                        room4, room5, room6,
                        room7, room8, room9;
 
     /* 3x3 grid:
-           room1 - room2 - room3
-             |               |
-           room4   room5   room6
-             |       |       |
-           room7 - room8 - room9 */
+       room1 - room2 - room3
+         |               |
+       room4   room5   room6
+         |       |       |
+       room7 - room8 - room9 */
 
     public World() {
+        Item torch = new Item(
+                "torch",
+                "A wooden torch. Its head is wrapped in oil-soaked cloth.",
+                Set.of("pickup", "lights", "ignites", "burns")
+        );
+        Item key = new Item(
+                "key",
+                "A small iron key. It's cold to the touch.",
+                Set.of("pickup", "unlocks")
+        );
+        Item table = new Item(
+                "table",
+                "A writer's desk it would seem. Among the writing utensils sits a single iron key",
+                Set.of("contains")
+        );
+        Item chest = new Item(
+                "chest",
+                "A sturdy looking chest. It seems to be locked",
+                Set.of("opens", "contains")
+        );
+        Item diamond = new Item(
+                "diamonds",
+                "It's like a reward.",
+                Set.of("pickup")
+        );
+
         room1 = new Room("Room 1", "An unremarkable room with two doors.");
         room2 = new Room("Room 2", "A narrow corridor with torches flickering on the walls.");
+        room2.addItem(torch);
+        torch.setLit(true);
         room3 = new Room("Room 3", "A dusty library with ancient books on crumbling shelves.");
         room4 = new Room("Room 4", "A dark hallway. You hear dripping in the distance.");
-        room5 = new Room("Room 5", "A mysterious chamber glowing with an eerie blue light. This place feels special.");
-        room6 = new Room("Room 6", "An abandoned guard post with rusted weapons on the walls.");
+        room5 = new Room("Room 5", "A mysterious chamber glowing with an eerie blue light. A chest sits at the center.");
+        room5.addItem(chest);
+        chest.setLocked(true);
+        chest.addContent(diamond);
+        room6 = new Room("Room 6", "An abandoned guard post with a table and rusted weapons on the walls.");
+        room6.addItem(table);
+        room6.addItem(key);
         room7 = new Room("Room 7", "A mossy grotto with the sound of dripping water echoing.");
         room8 = new Room("Room 8", "A vast underground lake stretching into the darkness.");
         room9 = new Room("Room 9", "A cold cave where your breath forms small clouds of mist.");

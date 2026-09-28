@@ -1,35 +1,40 @@
 public class Adventure {
-    private final UserInterface ui = new UserInterface();
     private Player player;
 
-    public void start() {
-        player = new Player(new World().getStartRoom());
-        ui.printWelcome();
-        ui.printRoom(player.getCurrentRoom());
-
-        boolean isRunning = true;
-
-        while (isRunning) {
-            String kommando = ui.readCommand();
-
-            switch (kommando) {
-                case "north", "east", "south", "west" -> move(kommando);
-                case "look" -> ui.printRoom(player.getCurrentRoom());
-                case "help" -> ui.printHelp();
-                case "exit" -> {
-                    ui.printGoodbye();
-                    isRunning = false;
-                }
-                default -> ui.printUnknownCommand();
-            }
-        }
+    public Adventure(Player player) {
+        this.player = player;
     }
 
-    private void move(String direction) {
-        if (player.move(direction)) {
-            ui.printRoom(player.getCurrentRoom());
-        } else {
-            ui.printCannotGo();
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean move(String direction) {
+       return player.move(direction);
+    }
+
+    public boolean grab(String itemName) {
+        Room room = player.getCurrentRoom();
+        Item item = room.getItem(itemName);
+        if (item == null) {
+            return false;
         }
+        if (!item.can("pickup")) {
+            return false;
+        }
+        room.removeItem(itemName);
+        player.grab(item);
+        return true;
+    }
+
+    public boolean drop(String itemName) {
+        Room room = player.getCurrentRoom();
+        Item item = player.getItem(itemName);
+        if (item == null) {
+            return false;
+        }
+        room.addItem(item);
+        player.drop(item);
+        return true;
     }
 }
