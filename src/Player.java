@@ -5,6 +5,7 @@ public class Player {
     private Room currentRoom;
     private final List<Item> inventory = new ArrayList<>();
     private World world;
+    private int health = 100;
 
     public Player(Room currentRoom, World world) {
         this.world = world;
@@ -69,5 +70,9 @@ public class Player {
                 return item;
         }
         return null;
+    }
+
+    public int getHealth (){
+        return health;
     }
 }

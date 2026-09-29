@@ -17,16 +17,16 @@ public class ConsoleUI {
         }
 
         return switch (command) {
-            case "go"           -> commandObject;
-            case "look", "l"    -> "look " + commandObject;
-            case "grab", "g"    -> "grab "    + commandObject;
-            case "drop", "d"    -> "drop "    + commandObject;
-            case "i"            -> "inventory";
-            case "n"            -> "north";
-            case "e"            -> "east";
-            case "s"            -> "south";
-            case "w"            -> "west";
-            default             -> command;
+            case "go" -> commandObject;
+            case "look", "l" -> "look " + commandObject;
+            case "grab", "g" -> "grab " + commandObject;
+            case "drop", "d" -> "drop " + commandObject;
+            case "i" -> "inventory";
+            case "n" -> "north";
+            case "e" -> "east";
+            case "s" -> "south";
+            case "w" -> "west";
+            default -> command;
         };
     }
 
@@ -46,12 +46,13 @@ public class ConsoleUI {
             }
             switch (command) {
                 case "north", "east", "south", "west" -> move(command);
-                case "look"      -> look(commandObject);
-                case "help"      -> printHelp();
+                case "look" -> look(commandObject);
+                case "help" -> printHelp();
                 case "inventory" -> inventory();
-                case "grab"      -> grab(commandObject);
-                case "drop"      -> drop(commandObject);
-                case "quit"      -> {
+                case "grab" -> grab(commandObject);
+                case "drop" -> drop(commandObject);
+                case "health" -> printHealth(adventure.getPlayer().getHealth());
+                case "quit" -> {
                     printGoodbye();
                     isRunning = false;
                 }
@@ -82,6 +83,7 @@ public class ConsoleUI {
                 printInspect(item);
         }
     }
+
     private void grab(String name) {
         Room room = getCurrentRoom();
         Item item = room.getItem(name);
@@ -93,14 +95,15 @@ public class ConsoleUI {
         } else
             printCannotGrab(item);
     }
+
     private void drop(String name) {
         Item item = adventure.getPlayer().getItem(name);
-        if (item == null)
-        {
+        if (item == null) {
             printUnknownCommand();
         } else if (adventure.drop(name))
             printDrop(item);
     }
+
     private void inventory() {
         if (adventure.getPlayer().hasAnyItems()) {
             printInventory();
@@ -114,12 +117,15 @@ public class ConsoleUI {
         IO.println("You enter " + room.getName());
         room.printVisited();
     }   // Needs to be fixed
+
     public void printRoomDescription(Room room) {
         IO.println(room.getDescription());
     }
+
     public void printCannotGo() {
         IO.println("You cannot go that way");
     }
+
     public void printInspect(Item item) {
         IO.println(item.getDescription());
     }
@@ -127,9 +133,11 @@ public class ConsoleUI {
     public void printGrab(Item item) {
         IO.println("You grab the " + item.getName());
     }
+
     public void printCannotGrab(Item item) {
         IO.println("You can't grab the " + item.getName() + ".");
     }
+
     public void printDrop(Item item) {
         IO.println("You drop the " + item.getName());
     }
@@ -138,6 +146,7 @@ public class ConsoleUI {
         IO.println("You are carrying:");
         IO.print(adventure.getPlayer().getInventory());
     }
+
     public void printEmpty() {
         IO.println("Inventory is empty.");
     }
@@ -161,6 +170,7 @@ public class ConsoleUI {
         IO.println("You wake up in a strange place. Nine rooms are connected, and one of them hides a secret.");
         IO.println("Type HELP at any time to see your options.\n");
     }
+
     public void printGoodbye() {
         IO.println("Goodbye!");
     }
@@ -168,4 +178,19 @@ public class ConsoleUI {
     public void printUnknownCommand() {
         IO.println("Unknown command. Type HELP for a list of commands.");
     }
+
+    public void printHealth (int health){
+        IO.println ("health: " + health +  " - ");
+        if (health >= 100){
+            IO.println("Your are in perfect health");
+        } else if (health > 50 ) { IO.println( "you are in good Health" ) ;
+        }  else if (health > 25 ) {
+            IO.println("you are in bad Health");
+        }
+       else {IO.println ("you are dead");
+       }
+
+
+    }
+
 }
