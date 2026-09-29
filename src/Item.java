@@ -5,8 +5,7 @@ import java.util.Set;
 public class Item {
     private String name;
     private String description;
-    private Set<String> capabilities;
-    private List<Item> contents = new ArrayList<>();
+    private final Set<String> capabilities;
 
     // States
     private boolean lit;

@@ -2,17 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
+    private World world;
     private Room currentRoom;
     private final List<Item> inventory = new ArrayList<>();
-    private World world;
+    private int currentHealth;
+    private int maxHealth;
 
-    public Player(Room currentRoom, World world) {
+    public Player(World world, Room currentRoom) {
         this.world = world;
         this.currentRoom = getWorld().getStartRoom();
-    }
-
-    public Player(Room startRoom) {
-        this.currentRoom = getWorld().getStartRoom();
+        this.currentHealth = 100;
+        this.maxHealth = 100;
     }
 
     public Room getCurrentRoom() { //nyt
@@ -36,6 +36,25 @@ public class Player {
         }
         currentRoom = next;
         return true;
+    }
+
+    public enum EatResult {
+        NOT_FOUND,
+        NOT_EDIBLE,
+        CONSUMED
+    }
+
+    public EatResult eat(String name) {
+        Item item = getItem(name);
+        if (item == null) {
+            return EatResult.NOT_FOUND;
+        }
+        if (!(item instanceof Food food)) {
+            return EatResult.NOT_EDIBLE;
+        }
+        inventory.remove(food);
+        currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
+        return EatResult.CONSUMED;
     }
 
     public void grab(Item item) {

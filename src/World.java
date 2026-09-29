@@ -28,10 +28,9 @@ public class World {
                 "A writer's desk it would seem. Among the writing utensils sits a single iron key",
                 Set.of("contains")
         );
-        Item chest = new Item(
+        Container chest = new Container(
                 "chest",
-                "A sturdy looking chest. It seems to be locked",
-                Set.of("opens", "contains")
+                "A sturdy looking chest. It seems to be locked"
         );
         Item diamond = new Item(
                 "diamonds",

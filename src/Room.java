@@ -24,10 +24,6 @@ public class Room {
         this.isVisited = true;
     }   //needs to be moved to ConsoleUI
 
-    public void printDescription() {
-        IO.println(description);
-    }
-
     public void addItem(Item item) {
          items.add(item);
     }
