@@ -37,16 +37,22 @@ public class World {
                 "It's like a reward.",
                 Set.of("pickup")
         );
+        Food burger = new Food(
+                "burger",
+                "A juicy vennison burger.",
+                45
+        );
 
         room1 = new Room("Room 1", "An unremarkable room with two doors.");
+        room1.addItem(burger);
         room2 = new Room("Room 2", "A narrow corridor with torches flickering on the walls.");
         room2.addItem(torch);
-        torch.setLit(true);
+        //torch.setLit(true);
         room3 = new Room("Room 3", "A dusty library with ancient books on crumbling shelves.");
         room4 = new Room("Room 4", "A dark hallway. You hear dripping in the distance.");
         room5 = new Room("Room 5", "A mysterious chamber glowing with an eerie blue light. A chest sits at the center.");
         room5.addItem(chest);
-        chest.setLocked(true);
+        //chest.setLocked(true);
         chest.addContent(diamond);
         room6 = new Room("Room 6", "An abandoned guard post with a table and rusted weapons on the walls.");
         room6.addItem(table);
@@ -54,6 +60,7 @@ public class World {
         room7 = new Room("Room 7", "A mossy grotto with the sound of dripping water echoing.");
         room8 = new Room("Room 8", "A vast underground lake stretching into the darkness.");
         room9 = new Room("Room 9", "A cold cave where your breath forms small clouds of mist.");
+        // take 5 damage each time you enter
 
         /* Default, no walls placed
         link(room1, null,  room2, room4, null);

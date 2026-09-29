@@ -11,7 +11,7 @@ public class Player {
     public Player(World world, Room currentRoom) {
         this.world = world;
         this.currentRoom = getWorld().getStartRoom();
-        this.currentHealth = 100;
+        this.currentHealth = 55;
         this.maxHealth = 100;
     }
 
@@ -21,6 +21,13 @@ public class Player {
 
     public World getWorld() {
         return this.world;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public boolean move(String direction) { //fra adventure
@@ -38,20 +45,15 @@ public class Player {
         return true;
     }
 
-    public enum EatResult {
-        NOT_FOUND,
-        NOT_EDIBLE,
-        CONSUMED
-    }
-
     public EatResult eat(String name) {
         Item item = getItem(name);
         if (item == null) {
             return EatResult.NOT_FOUND;
         }
-        if (!(item instanceof Food food)) {
+        if (!(item instanceof Food)) {
             return EatResult.NOT_EDIBLE;
         }
+        Food food = (Food) getItem(name);
         inventory.remove(food);
         currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
         return EatResult.CONSUMED;

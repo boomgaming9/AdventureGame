@@ -8,4 +8,8 @@ public class Container extends Item {
     public Container(String name, String description) {
         super(name, description, Set.of("opens", "contains"));
     }
+
+    public void addContent(Item item) {
+        contents.add(item);
+    }
 }

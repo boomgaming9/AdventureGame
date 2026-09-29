@@ -29,11 +29,11 @@ public class Item {
     public boolean can(String capability) {
         return capabilities.contains(capability);
     }
-    public List<Item> getContents() {
+    /*public List<Item> getContents() {
         return contents;
-    }
+    } */
     //
-    public boolean isLit() {
+    /*public boolean isLit() {
         return lit;
     }
     public boolean isLocked() {
@@ -58,9 +58,6 @@ public class Item {
     }
     public void setOpen(boolean open) {
         this.open = open;
-    }
+    } */
     //
-    public void addContent(Item item) {
-        contents.add(item);
-    }
 }
