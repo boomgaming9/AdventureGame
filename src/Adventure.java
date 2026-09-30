@@ -37,4 +37,12 @@ public class Adventure {
         player.drop(item);
         return true;
     }
+
+    public EatResult eat(String itemName) {
+        return player.eat(itemName);      // this ?
+    }
+
+    /* public Item getItem(String itemName) {
+        return player.getItem(itemName);
+    } */    // potentially redundant
 }

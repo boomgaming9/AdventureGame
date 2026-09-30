@@ -48,14 +48,15 @@ public class Room {
     }
     public Item getItem(String name) {
         for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(name))
+            if (item.getShortName().equalsIgnoreCase(name) || item.getDisplayName().equalsIgnoreCase(name)) {
                 return item;
+            }
         }
         return null;
     }
     public boolean hasItem(String name) {
         return getItem(name) != null;
-    }
+    }   // For later torch integration
     //
     public Room getNorth() {
         return north;
