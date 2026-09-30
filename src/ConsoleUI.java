@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class ConsoleUI {
     public Adventure adventure;
 
@@ -21,6 +19,8 @@ public class ConsoleUI {
             case "look", "l"    -> "look " + commandObject;
             case "grab", "g"    -> "grab "    + commandObject;
             case "drop", "d"    -> "drop "    + commandObject;
+            case "eat"          -> "eat "     + commandObject;
+            case "h"            -> "health";
             case "i"            -> "inventory";
             case "n"            -> "north";
             case "e"            -> "east";
@@ -40,6 +40,8 @@ public class ConsoleUI {
             String command = readCommand();
             String commandObject = "";
 
+
+
             if (command.contains(" ")) {
                 commandObject = command.substring(command.indexOf(' ') + 1).trim();
                 command = command.substring(0, command.indexOf(' '));
@@ -48,7 +50,9 @@ public class ConsoleUI {
                 case "north", "east", "south", "west" -> move(command);
                 case "look"      -> look(commandObject);
                 case "help"      -> printHelp();
+                case "health"    -> printHealth();
                 case "inventory" -> inventory();
+                case "eat"       -> eat(commandObject);
                 case "grab"      -> grab(commandObject);
                 case "drop"      -> drop(commandObject);
                 case "quit"      -> {
@@ -109,11 +113,26 @@ public class ConsoleUI {
         }
     }
 
+    private void eat(String name) {
+        switch (adventure.eat(name)) {
+            case NOT_FOUND  -> printUnknownCommand();
+            case NOT_EDIBLE -> printNotEdible(name);
+            case CONSUMED   -> printEat(name);
+        }
+        /*if (eatResult == EatResult.NOT_FOUND) {
+            printUnknownCommand();
+        } else if (eatResult == EatResult.NOT_EDIBLE) {
+            printNotEdible(item);
+        } else if (eatResult == EatResult.CONSUMED) {
+            printEat((Food) item);
+        }*/
+    }
+
     // Prints
     public void printRoom(Room room) {
         IO.println("You enter " + room.getName());
         room.printVisited();
-    }   // Needs to be fixed
+    }
     public void printRoomDescription(Room room) {
         IO.println(room.getDescription());
     }
@@ -125,18 +144,39 @@ public class ConsoleUI {
     }
 
     public void printGrab(Item item) {
-        IO.println("You grab the " + item.getName());
+        IO.println("You grab the " + item.getDisplayName());
     }
     public void printCannotGrab(Item item) {
-        IO.println("You can't grab the " + item.getName() + ".");
+        IO.println("You can't grab the " + item.getShortName() + ".");
     }
     public void printDrop(Item item) {
-        IO.println("You drop the " + item.getName());
+        IO.println("You drop the " + item.getShortName());
+    }
+
+    public void printHealth() {
+        int hp = adventure.getPlayer().getCurrentHealth();
+        int maxHP = adventure.getPlayer().getMaxHealth();
+        IO.print("Health: " + hp + " - ");
+        if (hp == maxHP) {
+            IO.println("In perfect health!");
+        } else if (hp >= maxHP/2) {
+            IO.println("In good health.");
+        } else if (hp <= maxHP/4) {
+            IO.println("In bad health");
+        } else if (hp <= 0) {
+            IO.println("You are dead...");
+        }
+    }
+    public void printEat(String name) {
+        IO.println("You eat the " + name);
+    }
+    public void printNotEdible(String name) {
+        IO.println("You cannot eat the " + name);
     }
 
     public void printInventory() {
         IO.println("You are carrying:");
-        IO.print(adventure.getPlayer().getInventory());
+        IO.print(adventure.getPlayer().getInventory()); // <---
     }
     public void printEmpty() {
         IO.println("Inventory is empty.");

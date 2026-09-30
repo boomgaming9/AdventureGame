@@ -24,10 +24,6 @@ public class Room {
         this.isVisited = true;
     }   //needs to be moved to ConsoleUI
 
-    public void printDescription() {
-        IO.println(description);
-    }
-
     public void addItem(Item item) {
          items.add(item);
     }
@@ -52,14 +48,15 @@ public class Room {
     }
     public Item getItem(String name) {
         for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(name))
+            if (item.getShortName().equalsIgnoreCase(name) || item.getDisplayName().equalsIgnoreCase(name)) {
                 return item;
+            }
         }
         return null;
     }
     public boolean hasItem(String name) {
         return getItem(name) != null;
-    }
+    }   // For later torch integration
     //
     public Room getNorth() {
         return north;
