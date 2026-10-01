@@ -11,6 +11,6 @@ public class MeleeWeapon extends Weapon{
 
     @Override
     public int remainingUses(){
-        return remainingUses() -1 ;
+        return -1 ;
     }
 }
