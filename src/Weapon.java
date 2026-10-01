@@ -1,6 +1,6 @@
 import java.util.Set;
 
-public class Weapon extends Item {
+public abstract class Weapon extends Item {
     private final String damageType;
     private final int damage;
 
@@ -9,5 +9,8 @@ public class Weapon extends Item {
         this.damageType = damageType;
         this.damage = damage;
     }
+
+    public abstract boolean canUse ();
+    public abstract int useLeft();
 
 }
