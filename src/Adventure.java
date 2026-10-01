@@ -27,6 +27,10 @@ public class Adventure {
         return player.eat(itemName);
     }
 
+    public EquipResult equip (String itemName){
+        return player.equip(itemName);
+    }
+
     /* public Item getItem(String itemName) {
         return player.getItem(itemName);
     } */    // potentially redundant

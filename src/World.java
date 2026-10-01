@@ -74,6 +74,7 @@ public class World {
 
         room1 = new Room("Room 1", "An unremarkable room with two doors. A burger sits on a nearby shelf.");
         room1.addItem(burger);
+        room1.addItem(Sword);
         room2 = new Room("Room 2", "A narrow corridor with torches flickering on the walls.");
         room2.addItem(torch);
         //torch.setLit(true);

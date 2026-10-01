@@ -8,6 +8,7 @@ public class Player {
     private Room currentRoom;
     private int currentHealth;
     private final int maxHealth;
+    private Weapon equippedWeapon;
 
     public Player(World world, Room currentRoom) {
         this.world = world;
@@ -96,6 +97,24 @@ public class Player {
             return EatResult.NOT_EDIBLE;
         }
     }
+
+    public EquipResult equip (String name) {
+        Item inventoryItem = getItem(name);
+        Item roomItem = currentRoom.getItem(name);
+
+        if (inventoryItem == null) {
+            return EquipResult.NOT_FOUND;
+        }
+        if (inventoryItem instanceof Weapon weapon){
+             equippedWeapon= weapon;
+             return EquipResult.EQUIPPED;
+             }
+        else
+            return EquipResult.NOT_A_WEAPON_EQUIPPED;
+
+
+        }
+
 
     public boolean grab(String name) {
         Item item = currentRoom.getItem(name);
