@@ -54,19 +54,20 @@ public class World {
                 -45
         );
 
-        Weapon Spear = new RangedWeapon(
-                "Spear",
-                "Spear",
-                "A Shiny new Spear",
-                "Stab Damage",
-                -20
+        Weapon Bow = new RangedWeapon(
+                "Bow",
+                "Traveler's",
+                "Weak Ranged bow Commonly used by travelers for protection",
+                "Pierce Damage",
+                -5,
+                8
 
         );
 
         Weapon Sword = new MeleeWeapon(
                 "Sword",
-                "Sword",
-                "A rusty Sword",
+                "Taveler's",
+                "Weak sword commonly used by travelers for protection",
                 "Slash Damage",
                 -20
 
@@ -77,6 +78,7 @@ public class World {
         room1.addItem(Sword);
         room2 = new Room("Room 2", "A narrow corridor with torches flickering on the walls.");
         room2.addItem(torch);
+        room2.addItem(Bow);
         //torch.setLit(true);
         room3 = new Room("Room 3", "A dusty library with ancient books on crumbling shelves. A burger sits on a nearby shelf.");
         room3.addItem(burger);
