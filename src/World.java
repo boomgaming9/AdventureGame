@@ -58,6 +58,24 @@ public class World {
                 -45
         );
 
+        Weapon Spear = new RangedWeapon(
+                "Spear",
+                "Spear",
+                "A Shiny new Spear",
+                "Stab Damage",
+                -20
+
+        );
+
+        Weapon Sword = new MeleeWeapon(
+                "Sword",
+                "Sword",
+                "A rusty Sword",
+                "Slash Damage",
+                -20
+
+        );
+
         room1 = new Room("Room 1", "An unremarkable room with two doors. A burger sits on a nearby shelf.");
         room1.addItem(burger);
         room2 = new Room("Room 2", "A narrow corridor with torches flickering on the walls.");
