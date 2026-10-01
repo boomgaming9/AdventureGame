@@ -2,8 +2,8 @@ import java.util.Set;
 
 public class World {
     private final Room room1, room2, room3,
-                       room4, room5, room6,
-                       room7, room8, room9;
+            room4, room5, room6,
+            room7, room8, room9;
 
     /* 3x3 grid:
        room1 - room2 - room3
@@ -15,19 +15,16 @@ public class World {
     public World() {
         Item torch = new Item(
                 "torch",
-                "A wooden torch. Its head is wrapped in oil-soaked cloth.",
-                Set.of("pickup", "lights", "ignites", "burns")
+                "A wooden torch. Its head is wrapped in oil-soaked cloth."
         );
         Item key = new Item(
                 "key",
-                "iron key",
-                "A small iron key. It's cold to the touch.",
-                Set.of("pickup", "unlocks")
+                "iron",
+                "A small iron key. It's cold to the touch."
         );
         Item table = new Item(
                 "table",
-                "A writer's desk it would seem. Among the writing utensils sits a single iron key",
-                Set.of("contains")
+                "A writer's desk it would seem. Among the writing utensils sits a single iron key"
         );
         Container chest = new Container(
                 "chest",
@@ -36,8 +33,7 @@ public class World {
         );
         Item diamond = new Item(
                 "diamond",
-                "It's like a reward.",
-                Set.of("pickup")
+                "It's like a reward."
         );
         Food burger = new Food(
                 "burger",
@@ -54,7 +50,7 @@ public class World {
         Food mushroom = new Food(
                 "mushroom",
                 "dubious",
-                "A dubious looking thing.",
+                "A dubious looking mushroom.",
                 -45
         );
 
@@ -90,15 +86,15 @@ public class World {
         link(room7, room4, room8, null,  null);
         link(room8, room5, room9, null,  room7);
         link(room9, room6, null,  null,  room8); */
-        link(room1, null,  room2, room4, null);
-        link(room2, null,  room3, null,  room1);
-        link(room3, null,  null,  room6, room2);
-        link(room4, room1, null,  room7, null);
-        link(room5, null,  null,  room8, null);
-        link(room6, room3, null,  room9, null);
-        link(room7, room4, room8, null,  null);
-        link(room8, room5, room9, null,  room7);
-        link(room9, room6, null,  null,  room8);
+        link(room1, null, room2, room4, null);
+        link(room2, null, room3, null, room1);
+        link(room3, null, null, room6, room2);
+        link(room4, room1, null, room7, null);
+        link(room5, null, null, room8, null);
+        link(room6, room3, null, room9, null);
+        link(room7, room4, room8, null, null);
+        link(room8, room5, room9, null, room7);
+        link(room9, room6, null, null, room8);
     }
 
     private void link(Room current, Room north, Room east, Room south, Room west) {

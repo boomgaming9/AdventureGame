@@ -1,5 +1,5 @@
 public class Adventure {
-    private Player player;
+    private final Player player;
 
     public Adventure(Player player) {
         this.player = player;
@@ -9,37 +9,22 @@ public class Adventure {
         return player;
     }
 
+
+    // Functions
     public boolean move(String direction) {
-       return player.move(direction);
+        return player.move(direction);
     }
 
     public boolean grab(String itemName) {
-        Room room = player.getCurrentRoom();
-        Item item = room.getItem(itemName);
-        if (item == null) {
-            return false;
-        }
-        if (!item.can("pickup")) {
-            return false;
-        }
-        room.removeItem(itemName);
-        player.grab(item);
-        return true;
+        return player.grab(itemName);
     }
 
     public boolean drop(String itemName) {
-        Room room = player.getCurrentRoom();
-        Item item = player.getItem(itemName);
-        if (item == null) {
-            return false;
-        }
-        room.addItem(item);
-        player.drop(item);
-        return true;
+        return player.drop(itemName);
     }
 
     public EatResult eat(String itemName) {
-        return player.eat(itemName);      // this ?
+        return player.eat(itemName);
     }
 
     /* public Item getItem(String itemName) {

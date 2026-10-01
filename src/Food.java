@@ -4,7 +4,7 @@ public class Food extends Item {
     private final int health;
 
     public Food(String name, String prefix, String description, int health) {
-        super(name, prefix, description, Set.of("pickup", "eat"));
+        super(name, prefix, description);
         this.health = health;
     }
 
