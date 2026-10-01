@@ -88,6 +88,18 @@ public class Player {
         }
     }
 
+    public Weapon equip(String name){
+        Item inventoryItem = getItem(name);
+        Item roomItem = currentRoom.getItem(name);
+
+
+
+
+
+
+
+    }
+
     public void grab(Item item) {
         inventory.add(item);
     }
