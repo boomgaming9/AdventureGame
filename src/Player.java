@@ -152,7 +152,9 @@ public class Player {
 
     }
 
-
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
 
 
 }
