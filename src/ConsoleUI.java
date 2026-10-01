@@ -20,12 +20,14 @@ public class ConsoleUI {
             case "grab", "g" -> "grab " + commandObject;
             case "drop", "d" -> "drop " + commandObject;
             case "eat" -> "eat " + commandObject;
+            case "equip" -> "equip " + commandObject;
             case "h" -> "health";
             case "i" -> "inventory";
             case "n" -> "north";
             case "e" -> "east";
             case "s" -> "south";
             case "w" -> "west";
+            case "a" -> "attack";
             default -> command;
         };
     }
@@ -54,6 +56,8 @@ public class ConsoleUI {
                 case "eat" -> eat(commandObject);
                 case "grab" -> grab(commandObject);
                 case "drop" -> drop(commandObject);
+                case "equip" -> equip(commandObject);
+                case "attack" -> attack();
                 case "quit" -> {
                     printGoodbye();
                     isRunning = false;
@@ -184,6 +188,10 @@ public class ConsoleUI {
     public void printInventory() {
         IO.println("You are carrying:");
         IO.print(adventure.getPlayer().getInventory()); // <---
+        Weapon weapon = adventure.getPlayer().getEquippedWeapon(); //printing weapon in inventory
+        if (weapon != null) {
+            IO.println("Equipped: " + weapon.getDisplayName());
+        }
     }
 
     public void printEmpty() {
@@ -216,5 +224,34 @@ public class ConsoleUI {
 
     public void printUnknownCommand() {
         IO.println("Unknown command. Type HELP for a list of commands.");
+    }
+
+    private void equip(String name) {
+        switch (adventure.equip(name)) {
+            case NOT_FOUND -> IO.println("You don't have this weapon");
+            case NOT_A_WEAPON_EQUIPPED -> IO.println("The " + adventure.getPlayer().getItem(name).getDisplayName() + " is not a weapon");
+            case EQUIPPED -> IO.println("You have equipped the " + adventure.getPlayer().getEquippedWeapon().getDisplayName());
+        }
+    }
+
+    public void attack(){
+        Player player = adventure.getPlayer();
+
+        switch (adventure.attack()) {
+            case NO_WEAPON -> IO.println("You have no weapon equipped");
+            case OUT_OF_AMMO -> IO.println("You are out of ammo :( ");
+            case ATTACKED -> printAttack(player.getEquippedWeapon(), player.getUsesLeft());
+        }
+
+
+    }
+
+
+    public void printAttack (Weapon weapon, int usesLeft){
+        if (usesLeft == -1) {
+            IO.println("You swing the " + weapon.getDisplayName() + " at the empty air.");
+        } else {
+            IO.println("You fire the " + weapon.getDisplayName() + " into the empty air. " + usesLeft + " shots left.");
+        }
     }
 }
