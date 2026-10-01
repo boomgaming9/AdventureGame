@@ -2,12 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private World world;
-    private Room currentRoom;
-    private int currentHealth;
-    private int maxHealth;
     //
     private final List<Item> inventory = new ArrayList<>();
+    private final World world;
+    private Room currentRoom;
+    private int currentHealth;
+    private final int maxHealth;
 
     public Player(World world, Room currentRoom) {
         this.world = world;
@@ -19,15 +19,19 @@ public class Player {
     public World getWorld() {
         return this.world;
     }
+
     public Room getCurrentRoom() { //nyt
         return currentRoom;
     }
+
     public int getCurrentHealth() {
         return currentHealth;
     }
+
     public int getMaxHealth() {
         return maxHealth;
     }
+
     //
     public String getInventory() {
         String result = "";
@@ -36,6 +40,7 @@ public class Player {
         }
         return result;
     }   // Might become its own class later
+
     public Item getItem(String name) {
         for (Item item : inventory) {
             if (item.getShortName().equalsIgnoreCase(name) || item.getDisplayName().equalsIgnoreCase(name))
@@ -43,6 +48,7 @@ public class Player {
         }
         return null;
     }
+
     public boolean hasItem(String name) {
         for (Item item : inventory) {
             if (item.getShortName().equalsIgnoreCase(name))
@@ -50,6 +56,7 @@ public class Player {
         }
         return false;
     } // for later torch integration
+
     public boolean hasAnyItems() {
         return !inventory.isEmpty();
     }
@@ -57,10 +64,10 @@ public class Player {
     public boolean move(String direction) {
         Room next = switch (direction) {
             case "north" -> currentRoom.getNorth();
-            case "east"  -> currentRoom.getEast();
+            case "east" -> currentRoom.getEast();
             case "south" -> currentRoom.getSouth();
-            case "west"  -> currentRoom.getWest();
-            default      -> null;
+            case "west" -> currentRoom.getWest();
+            default -> null;
         };
         if (next == null) {
             return false;
@@ -75,11 +82,13 @@ public class Player {
 
         if (inventoryItem == null && roomItem == null) {
             return EatResult.NOT_FOUND;
-        } if ((roomItem instanceof Food food)) {
+        }
+        if ((roomItem instanceof Food food)) {
             currentRoom.removeItem(name);
             currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
             return EatResult.CONSUMED;
-        } if ((inventoryItem instanceof Food food)) {
+        }
+        if ((inventoryItem instanceof Food food)) {
             inventory.remove(food);
             currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
             return EatResult.CONSUMED;
@@ -88,10 +97,23 @@ public class Player {
         }
     }
 
-    public void grab(Item item) {
+    public boolean grab(String name) {
+        Item item = currentRoom.getItem(name);
+        if (item == null) {
+            return false;
+        }
+        currentRoom.removeItem(name);
         inventory.add(item);
+        return true;
     }
-    public void drop(Item item) {
+
+    public boolean drop(String name) {
+        Item item = currentRoom.getItem(name);
+        if (item == null) {
+            return true;
+        }
+        currentRoom.addItem(item);
         inventory.remove(item);
+        return false;
     }
 }

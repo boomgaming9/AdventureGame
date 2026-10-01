@@ -2,13 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Room {
-    private String name;
-    private String description;
-    private List<Item> items = new ArrayList<>();
+    private final String name;
+    private final String description;
     private Room north;
     private Room east;
     private Room south;
     private Room west;
+    private List<Item> items = new ArrayList<>();
     private boolean isVisited;
 
     public Room(String name, String description) {
@@ -22,11 +22,12 @@ public class Room {
                 ? description
                 : "You've already been here..."); // Potentially swap 'been here' with 'searched here' for added intrigue
         this.isVisited = true;
-    }   //needs to be moved to ConsoleUI
+    }   // needs to be moved to ConsoleUI
 
     public void addItem(Item item) {
-         items.add(item);
+        items.add(item);
     }
+
     public boolean removeItem(String name) {
         Item item = getItem(name);
         if (item == null)
@@ -42,7 +43,20 @@ public class Room {
     public String getDescription() {
         return description;
     }
-    //
+
+    public Room getNorth() {
+        return north;
+    }
+    public Room getEast() {
+        return east;
+    }
+    public Room getSouth() {
+        return south;
+    }
+    public Room getWest() {
+        return west;
+    }
+
     public List<Item> getItems() {
         return items;
     }
@@ -57,19 +71,6 @@ public class Room {
     public boolean hasItem(String name) {
         return getItem(name) != null;
     }   // For later torch integration
-    //
-    public Room getNorth() {
-        return north;
-    }
-    public Room getEast() {
-        return east;
-    }
-    public Room getSouth() {
-        return south;
-    }
-    public Room getWest() {
-        return west;
-    }
 
     // Setters
     public void setNorth(Room room) {

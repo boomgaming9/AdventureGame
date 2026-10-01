@@ -5,7 +5,7 @@ public class Weapon extends Item {
     private final int damage;
 
     public Weapon(String name, String prefix, String description, String damageType, int damage) {
-        super(name, prefix, description, Set.of("pickup", "attack"));
+        super(name, prefix, description);
         this.damageType = damageType;
         this.damage = damage;
     }
