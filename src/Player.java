@@ -9,6 +9,7 @@ public class Player {
     private int currentHealth;
     private final int maxHealth;
     private Weapon equippedWeapon;
+    private int usesLeft;
 
     public Player(World world, Room currentRoom) {
         this.world = world;
@@ -135,6 +136,23 @@ public class Player {
         inventory.remove(item);
         return false;
     }
+
+    public AttackResult attack(){
+        if (equippedWeapon == null){
+            return AttackResult.NO_WEAPON;
+        }
+        if (!equippedWeapon.canUse()){
+            return AttackResult.OUT_OF_AMMO;
+        }
+        else return AttackResult.ATTACKED;
+    }
+
+    public int getUsesLeft(){
+        return this.usesLeft;
+
+    }
+
+
 
 
 }
