@@ -144,7 +144,8 @@ public class Player {
         if (!equippedWeapon.canUse()){
             return AttackResult.OUT_OF_AMMO;
         }
-        else return AttackResult.ATTACKED;
+        usesLeft = equippedWeapon.remainingUses();
+        return AttackResult.ATTACKED;
     }
 
     public int getUsesLeft(){
