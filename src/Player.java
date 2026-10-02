@@ -9,7 +9,7 @@ public class Player {
     private final int maxHealth;
     private Weapon equippedWeapon;
 
-    public Player(World world, Room currentRoom) {
+    public Player(World world) {
         this.world = world;
         this.currentRoom = world.getStartRoom();
         this.currentHealth = 100;
