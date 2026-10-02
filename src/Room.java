@@ -57,8 +57,12 @@ public class Room {
         return west;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public String getItems() {
+        String result = "";
+        for (Item item : items) {
+            result += item.getDisplayName() + "\n";
+        }
+        return result;
     }
     public Item getItem(String name) {
         for (Item item : items) {
