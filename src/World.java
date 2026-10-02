@@ -17,6 +17,19 @@ public class World {
                 "torch",
                 "A wooden torch. Its head is wrapped in oil-soaked cloth."
         );
+        MeleeWeapon axe = new MeleeWeapon(
+                "axe",
+                "rusty",
+                "A rusty axe of a bygone era.",
+                2
+                );
+        RangedWeapon crossbow = new RangedWeapon(
+                "crossbow",
+                "heavy",
+                "A heavy crossbow. Standard military issue.",
+                3,
+                20
+        );
         Item key = new Item(
                 "key",
                 "iron",
@@ -24,7 +37,7 @@ public class World {
         );
         Item table = new Item(
                 "table",
-                "A writer's desk it would seem. Among the writing utensils sits a single iron key"
+                "A writer's desk it would seem."
         );
         Container chest = new Container(
                 "chest",
@@ -54,22 +67,22 @@ public class World {
                 -45
         );
 
-        room1 = new Room("Room 1", "An unremarkable room with two doors. A burger sits on a nearby shelf.");
+        room1 = new Room("Room 1", "An unremarkable room with two doors.");
         room1.addItem(burger);
         room2 = new Room("Room 2", "A narrow corridor with torches flickering on the walls.");
         room2.addItem(torch);
-        //torch.setLit(true);
-        room3 = new Room("Room 3", "A dusty library with ancient books on crumbling shelves. A burger sits on a nearby shelf.");
+        room3 = new Room("Room 3", "A dusty library with ancient books on crumbling shelves.");
         room3.addItem(burger);
         room4 = new Room("Room 4", "A dark hallway. You hear dripping in the distance.");
         room4.addItem(burger2);
         room5 = new Room("Room 5", "A mysterious chamber glowing with an eerie blue light. A chest sits at the center.");
         room5.addItem(chest);
-        //chest.setLocked(true);
         chest.addContent(diamond);
         room6 = new Room("Room 6", "An abandoned guard post with a table and rusted weapons on the walls.");
         room6.addItem(table);
         room6.addItem(key);
+        room6.addItem(axe);
+        room6.addItem(crossbow);
         room7 = new Room("Room 7", "A mossy grotto with the sound of dripping water echoing.");
         room7.addItem(mushroom);
         room8 = new Room("Room 8", "A vast underground lake stretching into the darkness.");

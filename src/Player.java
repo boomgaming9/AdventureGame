@@ -2,63 +2,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    //
     private final List<Item> inventory = new ArrayList<>();
     private final World world;
     private Room currentRoom;
     private int currentHealth;
     private final int maxHealth;
+    private Weapon equippedWeapon;
 
     public Player(World world, Room currentRoom) {
         this.world = world;
-        this.currentRoom = getWorld().getStartRoom();       // <---
-        this.currentHealth = 55;
+        this.currentRoom = world.getStartRoom();
+        this.currentHealth = 100;
         this.maxHealth = 100;
-    }
-
-    public World getWorld() {
-        return this.world;
-    }
-
-    public Room getCurrentRoom() { //nyt
-        return currentRoom;
-    }
-
-    public int getCurrentHealth() {
-        return currentHealth;
-    }
-
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    //
-    public String getInventory() {
-        String result = "";
-        for (Item item : inventory) {
-            result += item.getDisplayName() + "\n";
-        }
-        return result;
-    }   // Might become its own class later
-
-    public Item getItem(String name) {
-        for (Item item : inventory) {
-            if (item.getShortName().equalsIgnoreCase(name) || item.getDisplayName().equalsIgnoreCase(name))
-                return item;
-        }
-        return null;
-    }
-
-    public boolean hasItem(String name) {
-        for (Item item : inventory) {
-            if (item.getShortName().equalsIgnoreCase(name))
-                return true;
-        }
-        return false;
-    } // for later torch integration
-
-    public boolean hasAnyItems() {
-        return !inventory.isEmpty();
+        this.equippedWeapon = null;
     }
 
     public boolean move(String direction) {
@@ -108,12 +64,97 @@ public class Player {
     }
 
     public boolean drop(String name) {
-        Item item = currentRoom.getItem(name);
+        Item item = getItem(name);
         if (item == null) {
-            return true;
+            return false;
         }
-        currentRoom.addItem(item);
+        if (item == equippedWeapon) {       // Handles dropping an equipped item
+            equippedWeapon = null;
+        }
         inventory.remove(item);
+        currentRoom.addItem(item);
+        return true;
+    }
+
+
+    public EquipResult equip(String name) {
+        Item item = getItem(name);
+        if (item == null) {
+            return EquipResult.NOT_IN_INVENTORY;
+        }
+        if (!(item instanceof Weapon newWeapon)) {  // newWeapon declared
+            return EquipResult.NOT_A_WEAPON;
+        }
+        this.equippedWeapon = newWeapon;
+        return EquipResult.SUCCESS;
+    }
+    public boolean unequip() {
+        if (equippedWeapon == null) {
+            return false;
+        }
+        equippedWeapon = null;
+        return true;
+    }
+
+
+    // Getters
+    public World getWorld() {
+        return this.world;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public String getContents() {
+        return currentRoom.getItems();
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public int getUses() {
+        return equippedWeapon.getUses();
+    }
+
+    public String getInventory() {
+        String result = "";
+        for (Item item : inventory) {
+            if (item == equippedWeapon) {
+                result += item.getDisplayName() + " (equipped)\n";
+            } else {
+                result += item.getDisplayName() + "\n";
+            }
+        }
+        return result;
+    }
+
+    public Item getItem(String name) {
+        for (Item item : inventory) {
+            if (item.getShortName().equalsIgnoreCase(name) || item.getDisplayName().equalsIgnoreCase(name))
+                return item;
+        }
+        return null;
+    }
+
+    public boolean hasItem(String name) {
+        for (Item item : inventory) {
+            if (item.getShortName().equalsIgnoreCase(name))
+                return true;
+        }
         return false;
+    }
+
+    public boolean hasAnyItems() {
+        return !inventory.isEmpty();
     }
 }

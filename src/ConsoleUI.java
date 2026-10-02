@@ -5,6 +5,14 @@ public class ConsoleUI {
         this.adventure = adventure;
     }
 
+    private Room getCurrentRoom() {
+        return adventure.getCurrentRoom();
+    }
+
+    private String getWeaponString() {
+        return adventure.getWeaponString();
+    }
+
     public String readCommand() {
         String command = IO.readln("> ").trim().toLowerCase();
         String commandObject = "";
@@ -20,6 +28,9 @@ public class ConsoleUI {
             case "grab", "g" -> "grab " + commandObject;
             case "drop", "d" -> "drop " + commandObject;
             case "eat" -> "eat " + commandObject;
+            case "equip" -> "equip " + commandObject;
+            case "unequip" -> "unequip";
+            case "a" -> "attack " + commandObject;
             case "h" -> "health";
             case "i" -> "inventory";
             case "n" -> "north";
@@ -37,6 +48,10 @@ public class ConsoleUI {
         boolean isRunning = true;
 
         while (isRunning) {
+            if (adventure.getCurrentHealth() <= 0) {
+                printDeath();
+                isRunning = false;
+            }
             String command = readCommand();
             String commandObject = "";
 
@@ -51,7 +66,12 @@ public class ConsoleUI {
                 case "help" -> printHelp();
                 case "health" -> printHealth();
                 case "inventory" -> inventory();
+                case "attack" -> attack();
+                case "punch" -> punch();
+                case "shoot" -> shoot();
                 case "eat" -> eat(commandObject);
+                case "equip" -> equip(commandObject);
+                case "unequip" -> unequip();
                 case "grab" -> grab(commandObject);
                 case "drop" -> drop(commandObject);
                 case "quit" -> {
@@ -70,10 +90,6 @@ public class ConsoleUI {
             printCannotGo();
     }
 
-    private Room getCurrentRoom() {
-        return adventure.getPlayer().getCurrentRoom();
-    }
-
     private void look(String name) {
         if (name.isEmpty() || name.equals("room")) {
             printRoomDescription(getCurrentRoom());
@@ -86,6 +102,21 @@ public class ConsoleUI {
         }
     }
 
+    private void equip(String name) {
+        switch (adventure.equip(name)) {
+            case SUCCESS -> printEquip(name);
+            case NOT_IN_INVENTORY -> printUnknownCommand();
+            case NOT_A_WEAPON -> printUnknownCommand();
+        }
+    }
+    private void unequip() {
+        if (adventure.unequip()) {
+            printUnequip();
+        } else {
+            printNoWeapon();
+        }
+    }
+
     private void grab(String name) {
         Room room = getCurrentRoom();
         Item item = room.getItem(name);
@@ -93,12 +124,12 @@ public class ConsoleUI {
         if (item == null) {
             printUnknownCommand();
         } else if (adventure.grab(name)) {
-            printGrab(item);
+            printGrab(name);
         }
     }
 
     private void drop(String name) {
-        Item item = adventure.getPlayer().getItem(name);
+        Item item = adventure.getItem(name);
         if (item == null) {
             printUnknownCommand();
         } else if (adventure.drop(name))
@@ -106,10 +137,31 @@ public class ConsoleUI {
     }
 
     private void inventory() {
-        if (adventure.getPlayer().hasAnyItems()) {
+        if (adventure.hasAnyItems()) {
             printInventory();
         } else {
             printEmpty();
+        }
+    }
+
+    // Attack / Punch / Shoot
+    private void attack() {
+        switch (adventure.attack()) {
+            case SUCCESS -> printAttack(getWeaponString());
+            case RANGED_SUCCESS -> printShoot(getWeaponString(), adventure.getUses());
+            case NO_RANGED_WEAPON -> printNoRangedWeapon();
+            case OUT_OF_AMMO -> printNoAmmo(getWeaponString());
+        }
+    }
+    private void punch() {
+        adventure.punch();
+        printPunch();
+    }
+    private void shoot() {
+        switch (adventure.shoot()) {
+            case RANGED_SUCCESS -> printShoot(getWeaponString(), adventure.getUses());
+            case NO_RANGED_WEAPON -> printNoRangedWeapon();
+            case OUT_OF_AMMO -> printNoAmmo(getWeaponString());
         }
     }
 
@@ -119,77 +171,115 @@ public class ConsoleUI {
             case NOT_EDIBLE -> printNotEdible(name);
             case CONSUMED -> printEat(name);
         }
-        /*if (eatResult == EatResult.NOT_FOUND) {
-            printUnknownCommand();
-        } else if (eatResult == EatResult.NOT_EDIBLE) {
-            printNotEdible(item);
-        } else if (eatResult == EatResult.CONSUMED) {
-            printEat((Food) item);
-        }*/
     }
 
-    // Prints
+    // ================[ PRINTS ]================
+
+    // Movement
     public void printRoom(Room room) {
         IO.println("You enter " + room.getName());
         room.printVisited();
-    }
 
-    public void printRoomDescription(Room room) {
-        IO.println(room.getDescription());
+        String contents = adventure.getContents();
+        if (!contents.isEmpty()) {
+            IO.println("You see:");
+            IO.print(contents);
+        }
     }
-
     public void printCannotGo() {
         IO.println("You cannot go that way");
     }
 
+    // Look
+    public void printRoomDescription(Room room) {
+        IO.println(room.getDescription());
+
+        String contents = adventure.getContents();
+        if (!contents.isEmpty()) {
+            IO.println("You see:");
+            IO.print(contents);
+        }
+    }
     public void printInspect(Item item) {
         IO.println(item.getDescription());
     }
 
-    public void printGrab(Item item) {
-        IO.println("You grab the " + item.getDisplayName());
+    // Equip / Unequip
+    public void printEquip(String name) {
+        IO.println("You equip the " + name);
+    }
+    public void printUnequip() {
+        IO.println("You unequip your weapon");
+    }
+    public void printNoWeapon() {
+        IO.println("You have no weapon equipped.");
     }
 
-    public void printCannotGrab(Item item) {
-        IO.println("You can't grab the " + item.getShortName() + ".");
+    // Grab
+    public void printGrab(String name) {
+        IO.println("You grab the " + name);
+    }
+    public void printCannotGrab(String name) {
+        IO.println("You can't grab the " + name + ".");
     }
 
+    // Drop
     public void printDrop(Item item) {
         IO.println("You drop the " + item.getShortName());
     }
 
+    // Health
     public void printHealth() {
-        int hp = adventure.getPlayer().getCurrentHealth();
-        int maxHP = adventure.getPlayer().getMaxHealth();
+        int hp = adventure.getCurrentHealth();
+        int maxHP = adventure.getMaxHealth();
         IO.print("Health: " + hp + " - ");
-        if (hp == maxHP) {
+        if (hp <= 0) {
+            IO.println("You are dead...");
+        } else if (hp == maxHP) {
             IO.println("In perfect health!");
         } else if (hp >= maxHP / 2) {
             IO.println("In good health.");
         } else if (hp <= maxHP / 4) {
             IO.println("In bad health");
-        } else if (hp <= 0) {
-            IO.println("You are dead...");
         }
     }
 
+    // Eat
     public void printEat(String name) {
         IO.println("You eat the " + name);
     }
-
     public void printNotEdible(String name) {
         IO.println("You cannot eat the " + name);
     }
 
-    public void printInventory() {
-        IO.println("You are carrying:");
-        IO.print(adventure.getPlayer().getInventory()); // <---
+    //Attack / Punch / Shoot
+    public void printAttack(String name) {
+        IO.println("You attack the empty air with your " + name + ".");
+    }
+    public void printPunch() {
+        IO.println("You punch the empty air");
+    }
+    public void printShoot(String name, int count) {
+        IO.print("You shoot at the empty air with your " + name + ". ");
+        IO.println(count + " shots left.");
+    }
+    public void printNoRangedWeapon() {
+        IO.println("You have no ranged weapon with which to shoot.");
+    }
+    public void printNoAmmo(String name) {
+        IO.println("Your " + name + " is out of ammo.");
     }
 
+    // Inventory
+    public void printInventory() {
+        IO.println("You are carrying:");
+        IO.print(adventure.getInventory()); // <---
+    }
     public void printEmpty() {
         IO.println("Inventory is empty.");
     }
 
+    // Help
     public void printHelp() {
         IO.println("Commands:");
         IO.println(" go north / north / n");
@@ -208,6 +298,13 @@ public class ConsoleUI {
     public void printWelcome() {
         IO.println("You wake up in a strange place. Nine rooms are connected, and one of them hides a secret.");
         IO.println("Type HELP at any time to see your options.\n");
+    }
+
+    public void printDeath() {
+        IO.println();
+        IO.println("You have died.");
+        IO.println("Thank you for playing.");
+        IO.println("...");
     }
 
     public void printGoodbye() {
