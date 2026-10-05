@@ -108,6 +108,25 @@ public class World {
         link(room7, room4, room8, null, null);
         link(room8, room5, room9, null, room7);
         link(room9, room6, null, null, room8);
+        Enemy troll = new Enemy(
+                "troll",
+                "a cave troll",
+                "A large, menacing cave troll.",
+                30,
+                sword,
+                room8
+        );
+        room8.addEnemy(troll);
+
+        Enemy bandit = new Enemy(
+                "bandit",
+                "a sneaky bandit",
+                "A sneaky bandit with a revolver.",
+                20,
+                revolver,
+                room6
+        );
+        room6.addEnemy(bandit);
     }
 
     private void link(Room current, Room north, Room east, Room south, Room west) {
