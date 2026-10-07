@@ -67,8 +67,7 @@ public class Enemy {
         room.addItem(weapon);
 
         // Optionally drop corpse
-        Item corpse = new Item(shortName + " corpse",
-                "the corpse of " + longName, Collections.singleton("It lies still on the ground."));
+        Item corpse = new Item("corpse", shortName, "It lies still on the ground."); //passing single string
         room.addItem(corpse);
 
         // Remove enemy from room
