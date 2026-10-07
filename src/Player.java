@@ -8,6 +8,8 @@ public class Player {
     private int currentHealth;
     private final int maxHealth;
     private Weapon equippedWeapon;
+    private static final int fistDamage = 1;
+
 
     public Player(World world) {
         this.world = world;
@@ -41,12 +43,12 @@ public class Player {
         }
         if ((roomItem instanceof Food food)) {
             currentRoom.removeItem(name);
-            currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
+            modifyHealth(food.getHealth());    //math.min stops health from going over 100
             return EatResult.CONSUMED;
         }
         if ((inventoryItem instanceof Food food)) {
             inventory.remove(food);
-            currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
+            modifyHealth(food.getHealth());    //math.min stops health from going over 100
             return EatResult.CONSUMED;
         } else {
             return EatResult.NOT_EDIBLE;
@@ -94,6 +96,57 @@ public class Player {
         }
         equippedWeapon = null;
         return true;
+    }
+
+    public Enemy findEnemy(String name) {
+        if (name.isEmpty()) return currentRoom.getFirstEnemy();
+        return currentRoom.getEnemy(name);
+    }
+
+    public AttackResult attack(String name) {
+        Enemy target = findEnemy(name);
+        if (!name.isEmpty() && target == null) return AttackResult.NO_SUCH_ENEMY;   // no shot used
+        if (equippedWeapon == null) return AttackResult.NO_WEAPON;
+        if (!equippedWeapon.canUse()) return AttackResult.OUT_OF_AMMO;
+
+        equippedWeapon.uses();
+
+
+        if (target == null) return AttackResult.HIT_AIR;          // the empty air
+
+        target.hit(equippedWeapon.getDamage());                   // hit, not takeDamage
+        if (target.isDead()) return AttackResult.ENEMY_KILLED;
+
+        target.attack(this);
+        if (isDead()) return AttackResult.PLAYER_KILLED;
+        return AttackResult.ENEMY_SURVIVED;
+    }
+
+    // punch method, not sure if needed?
+    public AttackResult punch(String name) {
+        Enemy target = findEnemy(name);
+        if (!name.isEmpty() && target == null) return AttackResult.NO_SUCH_ENEMY;
+
+        if (target == null) return AttackResult.HIT_AIR;
+
+        target.hit(fistDamage);
+        if (target.isDead()) return AttackResult.ENEMY_KILLED;
+
+        target.attack(this);
+        if (isDead()) return AttackResult.PLAYER_KILLED;
+        return AttackResult.ENEMY_SURVIVED;
+    }
+
+    public int getFistDamage() {
+        return fistDamage;
+    }
+
+    public void modifyHealth(int amount) {
+        currentHealth = Math.max(0, Math.min(currentHealth + amount, maxHealth));   // take from eatresult
+    }
+
+    public boolean isDead() {
+        return currentHealth <= 0;
     }
 
 
