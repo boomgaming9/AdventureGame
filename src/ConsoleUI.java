@@ -186,6 +186,7 @@ public class ConsoleUI {
             IO.println("You see:");
             IO.print(contents);
         }
+        printEnemies(room);
     }
     public void printCannotGo() {
         IO.println("You cannot go that way");
@@ -200,9 +201,18 @@ public class ConsoleUI {
             IO.println("You see:");
             IO.print(contents);
         }
+        printEnemies(room);
     }
     public void printInspect(Item item) {
         IO.println(item.getDescription());
+    }
+
+    // Enemies
+    public void printEnemies(Room room) {
+        if (room.hasEnemies()) {
+            IO.println("Beware! Here lurks:");
+            IO.print(room.getEnemies());
+        }
     }
 
     // Equip / Unequip
