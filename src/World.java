@@ -22,7 +22,15 @@ public class World {
                 "rusty",
                 "A rusty axe of a bygone era.",
                 2
-                );
+        );
+
+        MeleeWeapon sword = new MeleeWeapon(
+                "sword",
+                "steel",
+                "A heavy steel sword.",
+                20
+        );
+
         RangedWeapon crossbow = new RangedWeapon(
                 "crossbow",
                 "heavy",
@@ -30,6 +38,14 @@ public class World {
                 3,
                 20
         );
+
+        RangedWeapon revolver = new RangedWeapon(
+                "revolver",
+                "old",
+                "An old six-shooter.",
+                15,
+                6);
+
         Item key = new Item(
                 "key",
                 "iron",

@@ -9,6 +9,7 @@ public class Room {
     private Room south;
     private Room west;
     private List<Item> items = new ArrayList<>();
+    private final List<Enemy> enemies = new ArrayList<>();
     private boolean isVisited;
 
     public Room(String name, String description) {
@@ -35,6 +36,16 @@ public class Room {
         items.remove(item);
         return true;
     }
+
+    //add enemies
+    public void addEnemy(Enemy enemy) {
+        enemies.add(enemy);
+    }
+
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
+    }
+
 
     // Getters
     public String getName() {
@@ -76,6 +87,31 @@ public class Room {
         return getItem(name) != null;
     }   // For later torch integration
 
+    public Enemy getEnemy(String name) {
+        for (Enemy enemy : enemies) {
+            if (enemy.getShortName().equalsIgnoreCase(name) || enemy.getLongName().equalsIgnoreCase(name)) {
+                return enemy;
+            }
+        }
+        return null;
+    }
+
+    public Enemy getFirstEnemy() {
+        return enemies.isEmpty() ? null : enemies.get(0);
+    }
+
+    public boolean hasEnemies() {
+        return !enemies.isEmpty();
+    }
+
+    public String getEnemies() {
+        String result = "";
+        for (Enemy enemy : enemies) {
+            result += enemy.getLongName() + "\n";
+        }
+        return result;
+    }
+
     // Setters
     public void setNorth(Room room) {
         this.north = room;
@@ -89,4 +125,5 @@ public class Room {
     public void setWest(Room room) {
         this.west = room;
     }
+
 }

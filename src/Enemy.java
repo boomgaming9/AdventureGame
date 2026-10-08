@@ -8,7 +8,7 @@ public class Enemy {
 
     private int health;
     private Weapon weapon;
-    private Room room;   // The room the enemy stands in
+    private final Room room;   // The room the enemy stands in
 
     public Enemy(String shortName, String longName, String description,
                  int health, Weapon weapon, Room room) {
@@ -20,6 +20,39 @@ public class Enemy {
         this.weapon = weapon;
         this.room = room;
     }
+
+    // Enemy is attacked by the player's weapon
+    public void hit(int damage) {
+        modifyHealth(-damage);
+        if (isDead()) {
+            die();
+        }
+    }
+
+    // Enemy attacks the player
+    public void attack(Player player) {
+        player.modifyHealth(-getDamage());
+    }
+
+    public void modifyHealth(int amount) {
+        health += amount;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    private void die() {;
+        room.addItem(weapon);
+
+        // Optionally drop corpse
+        Item corpse = new Item("corpse", shortName, "It lies still on the ground."); //passing single string
+        room.addItem(corpse);
+
+        // Remove enemy from room
+        room.removeEnemy(this);
+    }
+
 
     // Getters
 
@@ -43,37 +76,8 @@ public class Enemy {
         return weapon;
     }
 
-    // Enemy is attacked by the player's weapon
-    public void hit(int damage) {
-        health -= damage;
-        IO.println(longName + " takes " + damage + " damage.");
-
-        if (health <= 0) {
-            die();
-        }
-    }
-
-    // Enemy attacks the player
-    public void attack(Player player) {
-        int dmg = weapon.getDamage();
-        IO.println(longName + " attacks you for " + dmg + " damage.");
-        player.hit(dmg);
-    }
-
-    private void die() {
-        IO.println(longName + " dies, dropping its " + weapon.getShortName() + ".");
-
-        // Drop weapon into the room
-        room.addItem(weapon);
-
-        // Optionally drop corpse
-        Item corpse = new Item(shortName + " corpse",
-                "the corpse of " + longName, Collections.singleton("It lies still on the ground."));
-        room.addItem(corpse);
-
-        // Remove enemy from room
-        room.removeEnemy(this);
-    }
+    public int getDamage() {
+        return weapon.getDamage(); }
 
     @Override
     public String toString() {

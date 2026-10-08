@@ -31,6 +31,8 @@ public class ConsoleUI {
             case "equip" -> "equip " + commandObject;
             case "unequip" -> "unequip";
             case "a" -> "attack " + commandObject;
+            case "p" -> "punch " + commandObject;
+            case "shoot" -> "shoot " + commandObject; // s is allready taken for south
             case "h" -> "health";
             case "i" -> "inventory";
             case "n" -> "north";
@@ -66,14 +68,14 @@ public class ConsoleUI {
                 case "help" -> printHelp();
                 case "health" -> printHealth();
                 case "inventory" -> inventory();
-                case "attack" -> attack();
-                case "punch" -> punch();
-                case "shoot" -> shoot();
                 case "eat" -> eat(commandObject);
                 case "equip" -> equip(commandObject);
                 case "unequip" -> unequip();
                 case "grab" -> grab(commandObject);
                 case "drop" -> drop(commandObject);
+                case "attack" -> attack(commandObject);
+                case "punch" -> punch(commandObject);
+                case "shoot" -> shoot(commandObject);
                 case "quit" -> {
                     printGoodbye();
                     isRunning = false;
@@ -145,24 +147,23 @@ public class ConsoleUI {
     }
 
     // Attack / Punch / Shoot
-    private void attack() {
-        switch (adventure.attack()) {
-            case SUCCESS -> printAttack(getWeaponString());
-            case RANGED_SUCCESS -> printShoot(getWeaponString(), adventure.getUses());
-            case NO_RANGED_WEAPON -> printNoRangedWeapon();
-            case OUT_OF_AMMO -> printNoAmmo(getWeaponString());
-        }
+    private void attack(String name) {
+        Enemy target = adventure.findEnemy(name);
+        String weapon = getWeaponString();
+        int damage = adventure.getWeapon() == null ? 0 : adventure.getWeapon().getDamage();
+        printAttackResult(adventure.attack(name), target, name, weapon, damage);
     }
-    private void punch() {
-        adventure.punch();
-        printPunch();
+
+    private void punch(String name) {
+        Enemy target = adventure.findEnemy(name);
+        printAttackResult(adventure.punch(name), target, name, "fist", adventure.getPlayer().getFistDamage());
     }
-    private void shoot() {
-        switch (adventure.shoot()) {
-            case RANGED_SUCCESS -> printShoot(getWeaponString(), adventure.getUses());
-            case NO_RANGED_WEAPON -> printNoRangedWeapon();
-            case OUT_OF_AMMO -> printNoAmmo(getWeaponString());
-        }
+
+    private void shoot(String name) {
+        Enemy target = adventure.findEnemy(name);
+        String weapon = getWeaponString();
+        int damage = adventure.getWeapon() == null ? 0 : adventure.getWeapon().getDamage();
+        printAttackResult(adventure.shoot(name), target, name, weapon, damage);
     }
 
     private void eat(String name) {
@@ -185,6 +186,7 @@ public class ConsoleUI {
             IO.println("You see:");
             IO.print(contents);
         }
+        printEnemies(room);
     }
     public void printCannotGo() {
         IO.println("You cannot go that way");
@@ -199,9 +201,18 @@ public class ConsoleUI {
             IO.println("You see:");
             IO.print(contents);
         }
+        printEnemies(room);
     }
     public void printInspect(Item item) {
         IO.println(item.getDescription());
+    }
+
+    // Enemies
+    public void printEnemies(Room room) {
+        if (room.hasEnemies()) {
+            IO.println("Beware! Here lurks:");
+            IO.print(room.getEnemies());
+        }
     }
 
     // Equip / Unequip
@@ -269,6 +280,41 @@ public class ConsoleUI {
     public void printNoAmmo(String name) {
         IO.println("Your " + name + " is out of ammo.");
     }
+
+    public void printNoEnemy(String name) {
+        IO.println("There is no " + name + " here.");
+    }
+    public void printHitEnemy(Enemy enemy, String weaponName, int damage) {
+        IO.println("You hit " + enemy.getLongName() + " with your " + weaponName + " for " + damage + " damage.");
+    }
+    public void printEnemyDies(Enemy enemy) {
+        IO.println(enemy.getLongName() + " dies, dropping its " + enemy.getWeapon().getShortName() + ".");
+    }
+    public void printEnemyHitsYou(Enemy enemy) {
+        IO.println(enemy.getLongName() + " attacks you with its " + enemy.getWeapon().getShortName()
+                + " for " + enemy.getDamage() + " damage.");
+    }
+
+    private void printAttackResult(AttackResult result, Enemy target, String name, String weapon, int damage) {
+        switch (result) {
+            case INVALID_TARGET -> printNoEnemy(name);
+            case NO_WEAPON -> printNoWeapon();
+            case NO_RANGED_WEAPON -> printNoRangedWeapon();
+            case OUT_OF_AMMO -> printNoAmmo(weapon);
+            case SUCCESS -> printAttack(weapon);
+            case ENEMY_KILLED -> {
+                printHitEnemy(target, weapon, damage);
+                printEnemyDies(target);
+            }
+            case ENEMY_SURVIVED, PLAYER_KILLED -> {
+                printHitEnemy(target, weapon, damage);
+                printEnemyHitsYou(target);
+            }
+        }
+    }
+
+
+
 
     // Inventory
     public void printInventory() {

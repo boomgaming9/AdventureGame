@@ -29,28 +29,26 @@ public class Adventure {
     }
 
     // Attack
-    public AttackResult attack() {
-        Weapon weapon = getWeapon();
-        if (weapon == null || !weapon.isRanged()){
-            return punch();
-        }
-        return shoot();
+
+
+    public AttackResult attack(String name) {
+        return player.attack(name);
     }
 
-    public AttackResult punch () {
-        return AttackResult.SUCCESS;   // always succeeds
+    public AttackResult punch(String name) {
+        return player.punch(name);
     }
 
-    public AttackResult shoot () {
+    public AttackResult shoot(String name) {
         Weapon weapon = getWeapon();
-        if (weapon == null || !weapon.isRanged()){
+        if (weapon == null || !weapon.isRanged()) {
             return AttackResult.NO_RANGED_WEAPON;
         }
-        if (!weapon.canUse()) {
-            return AttackResult.OUT_OF_AMMO;
-        }
-        weapon.uses();
-        return AttackResult.RANGED_SUCCESS;
+        return player.attack(name);   // same sequence as attack, ammo checked with canUse()
+    }
+
+    public Enemy findEnemy(String name) {
+        return player.findEnemy(name);
     }
 
     public String getWeaponString() {
