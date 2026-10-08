@@ -2,8 +2,8 @@ import java.util.Set;
 
 public class World {
     private final Room room1, room2, room3,
-            room4, room5, room6,
-            room7, room8, room9;
+                       room4, room5, room6,
+                       room7, room8, room9;
 
     /* 3x3 grid:
        room1 - room2 - room3
@@ -21,13 +21,13 @@ public class World {
                 "axe",
                 "rusty",
                 "A rusty axe of a bygone era.",
-                2
+                7
                 );
         RangedWeapon crossbow = new RangedWeapon(
                 "crossbow",
                 "heavy",
                 "A heavy crossbow. Standard military issue.",
-                3,
+                10,
                 20
         );
         Item key = new Item(
@@ -66,6 +66,19 @@ public class World {
                 "A dubious looking mushroom.",
                 -45
         );
+        MeleeWeapon club = new MeleeWeapon (
+                "club",
+                "great",
+                "A large and unwieldy great club. How'd they even get that in here.",
+                20
+        );
+        Enemy troll = new Enemy(
+                "troll",
+                "blue",
+                "Who's a big fella. They seem to be guarding the entrance.",
+                16,
+                club
+        );
 
         room1 = new Room("Room 1", "An unremarkable room with two doors.");
         room1.addItem(burger);
@@ -86,6 +99,7 @@ public class World {
         room7 = new Room("Room 7", "A mossy grotto with the sound of dripping water echoing.");
         room7.addItem(mushroom);
         room8 = new Room("Room 8", "A vast underground lake stretching into the darkness.");
+        room8.addEnemy(troll);
         room9 = new Room("Room 9", "A cold cave where your breath forms small clouds of mist.");
         // take 5 damage each time you enter
 
@@ -108,25 +122,6 @@ public class World {
         link(room7, room4, room8, null, null);
         link(room8, room5, room9, null, room7);
         link(room9, room6, null, null, room8);
-        Enemy troll = new Enemy(
-                "troll",
-                "a cave troll",
-                "A large, menacing cave troll.",
-                30,
-                sword,
-                room8
-        );
-        room8.addEnemy(troll);
-
-        Enemy bandit = new Enemy(
-                "bandit",
-                "a sneaky bandit",
-                "A sneaky bandit with a revolver.",
-                20,
-                revolver,
-                room6
-        );
-        room6.addEnemy(bandit);
     }
 
     private void link(Room current, Room north, Room east, Room south, Room west) {

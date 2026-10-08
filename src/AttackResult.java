@@ -1,7 +1,7 @@
 public enum AttackResult {
+    NO_ENEMY,
+    NO_WEAPON,
+    NO_AMMO,
     SUCCESS,
-    RANGED_SUCCESS,
-    NO_RANGED_WEAPON,
-    OUT_OF_AMMO,
-    INVALID_TARGET  // for when target are introduced
+    KILL
 }

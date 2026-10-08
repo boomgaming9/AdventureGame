@@ -9,6 +9,7 @@ public class Room {
     private Room south;
     private Room west;
     private List<Item> items = new ArrayList<>();
+    private List<Enemy> enemies = new ArrayList<>();
     private boolean isVisited;
 
     public Room(String name, String description) {
@@ -17,15 +18,25 @@ public class Room {
         this.isVisited = false;
     }
 
-    public void printVisited() {
-        IO.println(isVisited == false
-                ? description
-                : "You've already been here..."); // Potentially swap 'been here' with 'searched here' for added intrigue
-        this.isVisited = true;
-    }   // needs to be moved to ConsoleUI
+    public boolean getVisited() {
+        return isVisited;
+    }
+    public void setVisited(boolean isVisited) {
+        this.isVisited = false;
+    }
+
+    // ? description : "You've already been here...");
 
     public void addItem(Item item) {
         items.add(item);
+    }
+    public void addEnemy(Enemy enemy) {
+        enemies.add(enemy);
+        enemy.setCurrentRoom(this);
+    }
+
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
     }
 
     public boolean removeItem(String name) {
@@ -72,9 +83,28 @@ public class Room {
         }
         return null;
     }
-    public boolean hasItem(String name) {
-        return getItem(name) != null;
-    }   // For later torch integration
+
+    public String getEnemies(){
+        String result = "";
+        for (Enemy enemy : enemies) {
+            result += enemy.getDisplayName() + "\n";
+        }
+        return result;
+    }
+    public Enemy getEnemy(String name) {
+        for (Enemy enemy : enemies) {
+            if (enemy.getShortName().equalsIgnoreCase(name) || enemy.getDisplayName().equalsIgnoreCase(name)) {
+                return enemy;
+            }
+        }
+        return null;
+    }
+    public Enemy getFirstEnemy() {
+        return enemies.isEmpty() ? null : enemies.get(0);
+    }
+    public boolean hasEnemies() {
+        return !enemies.isEmpty();
+    }
 
     // Setters
     public void setNorth(Room room) {

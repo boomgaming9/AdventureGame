@@ -1,83 +1,75 @@
-import java.util.Collections;
-
 public class Enemy {
-
-    private String shortName;
-    private String longName;
-    private String description;
-
+    private final String shortName;
+    private final String prefix;
+    private final String description;
     private int health;
-    private Weapon weapon;
-    private Room room;   // The room the enemy stands in
+    private final Weapon weapon;
+    private Room currentRoom;
+    private String color;
 
-    public Enemy(String shortName, String longName, String description,
-                 int health, Weapon weapon, Room room) {
-
-        this.shortName = shortName;
-        this.longName = longName;
+    public Enemy(String name, String prefix, String description, int health, Weapon weapon) {
+        this.shortName = name;
+        this.prefix = prefix;
         this.description = description;
         this.health = health;
         this.weapon = weapon;
-        this.room = room;
+        this.color = "\u001B[31m";
+    }
+
+    public String getColor() {
+        return "\u001B[31m";
+    }
+
+    public void modifyHealth(int amount) {
+        health += amount;
+    }
+
+    public void hit(int damage) {
+        modifyHealth(-damage);
+        if (isDead()) {
+            die();
+        }
+    }
+
+    public int attack(Player player) {
+        int damage = getDamage();
+        player.modifyHealth(-damage);
+        return damage;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    private void die() {
+        if (currentRoom == null) return;
+        if (weapon != null) currentRoom.addItem(weapon);
+        Item corpse = new Item("corpse", shortName,
+                "The corpse of a " + getDisplayName() + ". It lies still on the ground.");
+        currentRoom.addItem(corpse);
+        currentRoom.removeEnemy(this);
     }
 
     // Getters
-
     public String getShortName() {
         return shortName;
     }
 
-    public String getLongName() {
-        return longName;
+    public String getDisplayName() {
+        String name = shortName.equalsIgnoreCase(prefix) ? shortName : prefix + " " + shortName;
+        return color + name + "\u001B[0m";
     }
 
     public String getDescription() {
         return description;
     }
 
-    public int getHealth() {
-        return health;
+    public int getDamage() {
+        return weapon == null ? 0 : weapon.getDamage();
     }
 
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
-    // Enemy is attacked by the player's weapon
-    public void hit(int damage) {
-        health -= damage;
-        IO.println(longName + " takes " + damage + " damage.");
-
-        if (health <= 0) {
-            die();
-        }
-    }
-
-    // Enemy attacks the player
-    public void attack(Player player) {
-        int dmg = weapon.getDamage();
-        IO.println(longName + " attacks you for " + dmg + " damage.");
-        player.hit(dmg);
-    }
-
-    private void die() {
-        IO.println(longName + " dies, dropping its " + weapon.getShortName() + ".");
-
-        // Drop weapon into the room
-        room.addItem(weapon);
-
-        // Optionally drop corpse
-        Item corpse = new Item(shortName + " corpse",
-                "the corpse of " + longName, Collections.singleton("It lies still on the ground."));
-        room.addItem(corpse);
-
-        // Remove enemy from room
-        room.removeEnemy(this);
-    }
-
-    @Override
-    public String toString() {
-        return longName + " (" + health + " hp)";
+    public void setCurrentRoom(Room room) {
+        this.currentRoom = room;
     }
 }
 

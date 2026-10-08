@@ -5,11 +5,12 @@ public class Adventure {
         this.player = player;
     }
 
-    // Functions
+    // Movement
     public boolean move(String direction) {
         return player.move(direction);
     }
 
+    // Equip
     public EquipResult equip(String weaponName) {
         return player.equip(weaponName);
     }
@@ -17,6 +18,7 @@ public class Adventure {
         return player.unequip();
     }
 
+    // Grab / Drop
     public boolean grab(String itemName) {
         return player.grab(itemName);
     }
@@ -24,52 +26,31 @@ public class Adventure {
         return player.drop(itemName);
     }
 
+    // Eat
     public EatResult eat(String itemName) {
         return player.eat(itemName);
     }
 
     // Attack
-    public AttackResult attack() {
-        Weapon weapon = getWeapon();
-        if (weapon == null || !weapon.isRanged()){
-            return punch();
-        }
-        return shoot();
+    public AttackResult attack(String targetName) {
+        return player.attack(targetName);
     }
-
-    public AttackResult punch () {
-        return AttackResult.SUCCESS;   // always succeeds
-    }
-
-    public AttackResult shoot () {
-        Weapon weapon = getWeapon();
-        if (weapon == null || !weapon.isRanged()){
-            return AttackResult.NO_RANGED_WEAPON;
-        }
-        if (!weapon.canUse()) {
-            return AttackResult.OUT_OF_AMMO;
-        }
-        weapon.uses();
-        return AttackResult.RANGED_SUCCESS;
-    }
-
     public String getWeaponString() {
-        Weapon weapon = getWeapon();
-        return weapon == null ? "fist" : weapon.getDisplayName();
+        return player.getWeaponString();
+    }
+    public int getUses() {
+        return player.getUses();
     }
 
     // Getters
-    public Player getPlayer() {
-        return player;
-    }
-    public World getWorld() {
-        return player.getWorld();
-    }
     public Room getCurrentRoom() {
         return player.getCurrentRoom();
     }
     public String getContents() {
         return player.getContents();
+    }
+    public String getEnemies() {
+        return player.getEnemies();
     }
     public int getCurrentHealth() {
         return player.getCurrentHealth();
@@ -80,19 +61,7 @@ public class Adventure {
     public String getInventory() {
         return player.getInventory();
     }
-    public Weapon getWeapon() {
-        return player.getEquippedWeapon();
-    }
-    public Item getItem(String name) {
-        return player.getItem(name);
-    }
-    public boolean hasItem(String name) {
-        return player.hasItem(name);
-    }
     public boolean hasAnyItems() {
         return player.hasAnyItems();
-    }
-    public int getUses() {
-        return player.getUses();
     }
 }

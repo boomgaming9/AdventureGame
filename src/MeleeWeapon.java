@@ -10,12 +10,12 @@ public class MeleeWeapon extends Weapon{
     }
 
     @Override
-    public int uses() {
-        return -1;   // Unlimited uses, doesnt use ammo
+    public AttackResult uses() {
+        return AttackResult.SUCCESS;
     }
 
     @Override
     public int getUses() {
-        return uses();
+        return -1;  // Unlimited uses, doesnt use ammo
     }
 }

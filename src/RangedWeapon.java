@@ -1,9 +1,6 @@
 public class RangedWeapon extends Weapon{
     private int ammo;
 
-    @Override
-    public boolean isRanged() { return true; }
-
     public RangedWeapon(String name, String prefix, String description, int damage, int ammo) {
         super(name, prefix, description, damage);
         this.ammo = ammo;
@@ -15,9 +12,9 @@ public class RangedWeapon extends Weapon{
     }
 
     @Override
-    public int uses() {
+    public AttackResult uses() {
         ammo--;
-        return ammo;
+        return AttackResult.SUCCESS;
     }
 
     public int getUses() {

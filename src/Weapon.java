@@ -1,6 +1,5 @@
 public abstract class Weapon extends Item {
     private final int damage;
-    public boolean isRanged() { return false; }
 
     public Weapon(String name, String prefix, String description, int damage) {
         super(name, prefix, description);
@@ -13,7 +12,7 @@ public abstract class Weapon extends Item {
 
     public abstract boolean canUse();
 
-    public abstract int uses();
+    public abstract AttackResult uses();
 
     public abstract int getUses();
 }

@@ -32,6 +32,10 @@ public class Player {
         return true;
     }
 
+    public void modifyHealth(int amount) {
+        currentHealth = Math.max(0, Math.min(currentHealth + amount, maxHealth));
+    }
+
     public EatResult eat(String name) {
         Item inventoryItem = getItem(name);
         Item roomItem = currentRoom.getItem(name);
@@ -41,12 +45,12 @@ public class Player {
         }
         if ((roomItem instanceof Food food)) {
             currentRoom.removeItem(name);
-            currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
+            modifyHealth(food.getHealth());
             return EatResult.CONSUMED;
         }
         if ((inventoryItem instanceof Food food)) {
             inventory.remove(food);
-            currentHealth = Math.min(currentHealth + food.getHealth(), maxHealth);    //math.min stops health from going over 100
+            modifyHealth(food.getHealth());
             return EatResult.CONSUMED;
         } else {
             return EatResult.NOT_EDIBLE;
@@ -96,18 +100,47 @@ public class Player {
         return true;
     }
 
+    public AttackResult attack(String name) {
+        Enemy target = currentRoom.getEnemy(name);
+        if (equippedWeapon == null) {
+            return AttackResult.NO_WEAPON;
+        }
+        if (!equippedWeapon.canUse()) {
+            return AttackResult.NO_AMMO;
+        }
+        if (name.isEmpty()) {
+            return AttackResult.SUCCESS;
+        }
+        if (target == null) {
+            return AttackResult.NO_ENEMY;
+        }
 
-    // Getters
-    public World getWorld() {
-        return this.world;
+        equippedWeapon.uses();
+        target.hit(equippedWeapon.getDamage());
+        if (target.isDead()) {
+            return AttackResult.KILL;
+        }
+        target.attack(this);
+        return AttackResult.SUCCESS;
     }
 
+    public String enemiesAttack() {
+        Enemy enemy = currentRoom.getFirstEnemy();
+        if (enemy == null) return "";
+        int damage = enemy.attack(this);
+        return "The " + enemy.getDisplayName() + " hits you for " + damage + " damage.";
+    }
+
+    // Getters
     public Room getCurrentRoom() {
         return currentRoom;
     }
 
     public String getContents() {
         return currentRoom.getItems();
+    }
+    public String getEnemies() {
+        return currentRoom.getEnemies();
     }
 
     public int getCurrentHealth() {
@@ -120,6 +153,9 @@ public class Player {
 
     public Weapon getEquippedWeapon() {
         return equippedWeapon;
+    }
+    public String getWeaponString() {
+        return equippedWeapon.getDisplayName();
     }
 
     public int getUses() {
@@ -144,14 +180,6 @@ public class Player {
                 return item;
         }
         return null;
-    }
-
-    public boolean hasItem(String name) {
-        for (Item item : inventory) {
-            if (item.getShortName().equalsIgnoreCase(name))
-                return true;
-        }
-        return false;
     }
 
     public boolean hasAnyItems() {
