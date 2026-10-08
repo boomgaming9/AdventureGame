@@ -6,7 +6,6 @@ public enum AttackResult {
     INVALID_TARGET,// for when target are introduced
     NO_SUCH_ENEMY,
     NO_WEAPON,
-    HIT_AIR,
     PLAYER_KILLED,
     ENEMY_KILLED,
     ENEMY_SURVIVED

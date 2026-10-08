@@ -112,7 +112,7 @@ public class Player {
         equippedWeapon.uses();
 
 
-        if (target == null) return AttackResult.HIT_AIR;          // the empty air
+        if (target == null) return AttackResult.SUCCESS;          // the empty air
 
         target.hit(equippedWeapon.getDamage());                   // hit, not takeDamage
         if (target.isDead()) return AttackResult.ENEMY_KILLED;
@@ -127,7 +127,7 @@ public class Player {
         Enemy target = findEnemy(name);
         if (!name.isEmpty() && target == null) return AttackResult.NO_SUCH_ENEMY;
 
-        if (target == null) return AttackResult.HIT_AIR;
+        if (target == null) return AttackResult.SUCCESS;
 
         target.hit(fistDamage);
         if (target.isDead()) return AttackResult.ENEMY_KILLED;
